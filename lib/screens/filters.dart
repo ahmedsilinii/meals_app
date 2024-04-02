@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/providers/filters_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FiltersScreen extends StatefulWidget {
+class FiltersScreen extends ConsumerStatefulWidget {
   const FiltersScreen({
     super.key,
-    required this.currentFilters,
+    //required this.currentFilters,
   });
 
-  final Map<Filter, bool> currentFilters;
+  //final Map<Filter, bool> currentFilters;
 
   @override
-  State<FiltersScreen> createState() {
+  ConsumerState<FiltersScreen> createState() {
     return _FiltersScreenState();
   }
 }
 
-enum Filter {
-  glutenFree,
-  vegetarian,
-  vegan,
-  lactoseFree,
-}
+/* enum Filter {
+   glutenFree,
+   vegetarian,
+   vegan,
+   lactoseFree,
+  }*/
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   var _gluenFreeFilterSet = false;
   var _vegetarianFilterSet = false;
   var _veganFilterSet = false;
   var _lactoseFreeFilterSet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final activeFilters = ref.read(filtersProvider);
+    _gluenFreeFilterSet = activeFilters[Filter.glutenFree]!;
+    _vegetarianFilterSet = activeFilters[Filter.vegetarian]!;
+    _veganFilterSet = activeFilters[Filter.vegan]!;
+    _lactoseFreeFilterSet = activeFilters[Filter.lactoseFree]!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +63,20 @@ class _FiltersScreenState extends State<FiltersScreen> {
       // ignore: deprecated_member_use
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).setFilters({
             Filter.glutenFree: _gluenFreeFilterSet,
             Filter.vegetarian: _vegetarianFilterSet,
             Filter.vegan: _veganFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
           });
-          return false;
+          /*Navigator.of(context).pop({
+            Filter.glutenFree: _gluenFreeFilterSet,
+            Filter.vegetarian: _vegetarianFilterSet,
+            Filter.vegan: _veganFilterSet,
+            Filter.lactoseFree: _lactoseFreeFilterSet,
+          });
+          return false;*/
+          return true;
         },
         child: Column(
           children: [
