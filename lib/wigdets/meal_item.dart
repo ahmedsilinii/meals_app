@@ -7,9 +7,11 @@ class MealItem extends StatelessWidget {
   const MealItem({
     super.key,
     required this.meal,
+    required this.onSelectMeal,
   });
 
   final Meal meal;
+  final void Function(Meal meal) onSelectMeal;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,9 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          onSelectMeal(meal);
+        },
         child: Stack(
           children: [
             FadeInImage(
@@ -57,9 +61,8 @@ class MealItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         MealItemTrait(
-                          icon: Icons.schedule,
-                          label: '${meal.duration} min',
-                        ),
+                            icon: Icons.schedule,
+                            label: '${meal.duration} min'),
                         const SizedBox(width: 12),
                         MealItemTrait(
                           icon: Icons.work,
@@ -67,9 +70,8 @@ class MealItem extends StatelessWidget {
                         ),
                         const SizedBox(width: 12),
                         MealItemTrait(
-                          icon: Icons.attach_money,
-                          label: meal.affordabilityText,
-                        ),
+                            icon: Icons.attach_money,
+                            label: meal.affordabilityText),
                       ],
                     )
                   ],
